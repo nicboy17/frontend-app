@@ -4,14 +4,19 @@ import {
     TOKEN,
     TOKEN_FAILED,
     SET_USER_ID,
+    LOGIN,
+    LOGIN_USER_SUCCESS,
+    LOGIN_USER_ERROR
  } from '../actions/types';
+import { loginUser } from "../services/userService";
 
- function getToken(data) {
+function getToken(data) {
     //TODO: Add logic to get jwt token using username and password
     return { token: 'fakeToken', userId: 'fakeUserId' };
 }
 
 function* setToken(action) {
+    console.log('test');
     try {
         // const response = yield call(getToken, action);
         localStorage.setItem("userId", 'fakeUserId');
@@ -20,11 +25,24 @@ function* setToken(action) {
         // yield put({ type: TOKEN, response.token });
     }
     catch(error) {
-        console.error(error)
+        console.error(error);
         yield put({ type: TOKEN_FAILED, error });
     }
 }
 
 export function* getTokenSaga() {
     yield takeLatest(FETCH_TOKEN, setToken)
+}
+
+function* login(request) {
+    try {
+        const response = yield call(loginUser, request.user);
+        yield put({ type: LOGIN_USER_SUCCESS, response });
+    } catch(error) {
+        yield put({ type: LOGIN_USER_ERROR, error })
+    }
+}
+
+export function* loginSaga() {
+    yield takeLatest(LOGIN, login);
 }

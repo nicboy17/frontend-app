@@ -1,4 +1,4 @@
-import  {  FETCH_TOKEN, LOGOUT, RESET } from '../actions/types';
+import  {  FETCH_TOKEN, LOGOUT, RESET, LOGIN } from '../actions/types';
 
 export const fetchToken  = (payload) => ({
       type: FETCH_TOKEN,
@@ -11,4 +11,9 @@ export const logoutUser = () => ({
 
 export const clearStore = () => ({
     type: RESET
+});
+
+export const loginUser = (user) => ({
+   type: LOGIN,
+    user
 });
