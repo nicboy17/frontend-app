@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { registerUser } from "../../services/userService";
 
 
 import './SignUp.scss';
-
-const url = 'http://165.227.42.25';
 
 class SignUp extends Component {
     constructor (props) {
@@ -42,7 +40,7 @@ class SignUp extends Component {
 
         if(this.formValidator(signup)) {
             try {
-                const res = await axios.post(url + '/frontend/signup', signup);
+                const res = registerUser(signup);
                 if (res.data.code === "Signup successful") {
                     this.props.history.push('/signIn');
                 }

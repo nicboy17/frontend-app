@@ -8,3 +8,19 @@ export const loginUser = (request) => {
          return res;
     });
 };
+
+export const registerUser = (request) => {
+    const REGISTER_API_ENDPOINT = url + '/frontend/signup';
+
+    return axios.post(REGISTER_API_ENDPOINT, request).then(res => {
+        return res;
+    });
+};
+
+export const resetPassword = (request) => {
+    const RESET_PASSWORD_API_ENDPOINT = url + '/frontend/reset_password';
+
+    return axios.post(RESET_PASSWORD_API_ENDPOINT, request).then(res => {
+        return res;
+    });
+};

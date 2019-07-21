@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import axios from 'axios';
+import { resetPassword } from "../../services/userService";
 
 
 import './ForgotPassword.scss';
-const url = 'http://165.227.42.25';
 
 class ForgotPassword extends Component {
     constructor (props) {
@@ -35,7 +34,7 @@ class ForgotPassword extends Component {
 
         if(this.formValidator(reset)) {
             try {
-                const res = await axios.post(url + '/frontend/reset_password', reset);
+                const res = resetPassword(reset);
                 if (res.data.code === 'Reset successful') {
                     this.props.history.push('/signIn');
                 }
