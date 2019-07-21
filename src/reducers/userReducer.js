@@ -16,11 +16,10 @@ export default function userReducer (state = initialState, action) {
     switch (action.type) {
         case TOKEN:
             newState = Object.assign({}, state, {authenticated: true});
-            return newState;
+            return { ...newState, token: action.token };
         case LOGOUT:
-            localStorage.removeItem('userId');
-            localStorage.removeItem('token');
-            return state;
+            newState = Object.assign({}, state, {authenticated: false});
+            return { ...newState };
         case LOGIN_USER_SUCCESS:
             return { ...state, response: action.response.data, user: action.request };
         case LOGIN_USER_ERROR:

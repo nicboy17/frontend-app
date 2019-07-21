@@ -1,4 +1,4 @@
-import { put, takeLatest, call } from 'redux-saga/effects';
+import { put, takeLatest, call, select } from 'redux-saga/effects';
 import {
     FETCH_TOKEN,
     TOKEN,
@@ -8,23 +8,16 @@ import {
     LOGIN_USER_SUCCESS,
     LOGIN_USER_ERROR,
     REFERRAL_TOKEN,
-    REFERRAL_TOKEN_SUCCESS, REFERRAL_TOKEN_ERROR
+    REFERRAL_TOKEN_SUCCESS, REFERRAL_TOKEN_ERROR, LOGOUT, CHECK_TOKEN
 } from '../actions/types';
-import { loginUser, getReferralCode } from "../services/userService";
+import {loginUser, logoutUser, getReferralCode, setToken, timeRemaining} from "../services/userService";
+import {timer as observableTimer} from "rxjs";
+const getUserStore = (state) => state.UserStore;
 
-function getToken(data) {
-    //TODO: Add logic to get jwt token using username and password
-    return { token: 'fakeToken', userId: 'fakeUserId' };
-}
-
-function* setToken(action) {
-    console.log('test');
+function* newToken(action) {
     try {
-        // const response = yield call(getToken, action);
-        localStorage.setItem("userId", 'fakeUserId');
-        localStorage.setItem("token", 'fakeToken');
-        // yield put({ type: SET_USER_ID, response.userId });
-        // yield put({ type: TOKEN, response.token });
+        const token = yield call(setToken, action.payload);
+        yield put({ type: TOKEN, token });
     }
     catch(error) {
         console.error(error);
@@ -32,8 +25,8 @@ function* setToken(action) {
     }
 }
 
-export function* getTokenSaga() {
-    yield takeLatest(FETCH_TOKEN, setToken)
+export function* setTokenSaga() {
+    yield takeLatest(FETCH_TOKEN, newToken)
 }
 
 function* login(request) {
@@ -49,9 +42,18 @@ export function* loginSaga() {
     yield takeLatest(LOGIN, login);
 }
 
-function* referralToken(request) {
+function* logout(request) {
+    yield call(logoutUser, request);
+}
+
+export function* logoutSaga() {
+    yield takeLatest(LOGOUT, logout)
+}
+
+function* referralToken() {
+    let UserStore = yield select(getUserStore);
     try{
-        const ref_code = yield call(getReferralCode, request.username);
+        const ref_code = yield call(getReferralCode, UserStore.user.username);
         yield put({ type: REFERRAL_TOKEN_SUCCESS, ref_code });
     } catch(error) {
         yield put({ type: REFERRAL_TOKEN_ERROR, error })
@@ -60,4 +62,19 @@ function* referralToken(request) {
 
 export function* referralTokenSaga() {
     yield takeLatest(REFERRAL_TOKEN, referralToken);
+}
+
+function* checkToken() {
+    let UserStore = yield select(getUserStore);
+    const time = yield call(timeRemaining, UserStore.token);
+    if(time > 0) {
+        let timer = observableTimer(time*1000);
+        timer.subscribe(i => {
+            logoutUser();
+        });
+    }
+}
+
+export function* checkTokenSaga() {
+    yield takeLatest(CHECK_TOKEN, checkToken)
 }

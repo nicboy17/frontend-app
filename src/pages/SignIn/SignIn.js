@@ -37,6 +37,7 @@ class SignIn extends Component {
 
         if(this.formValidator(user)) {
             this.props.loginUser(user);
+            this.props.fetchToken(user);
         }
     }
 

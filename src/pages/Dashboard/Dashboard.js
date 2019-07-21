@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
-import './Dashboard.scss';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { checkToken } from "../../actions/signInActions";
+import { Redirect } from 'react-router-dom';
 
 import { LeftSidebar, TransferModal, DoughnutChart, LineChart, ChartTable, TransactionTable, Footer } from './../../components';
+import './Dashboard.scss';
 
 class Dashboard extends Component{
+    constructor (props) {
+        super(props);
+        this.props.checkToken();
+    }
 
     render(){
          return (
             <div className="dashboard-container">
+                {this.props.UserStore.authenticated ? '' : <Redirect to='login' />}
                 <div className="navigation">
                     <LeftSidebar/>
                 </div>
@@ -24,9 +33,24 @@ class Dashboard extends Component{
             </div>
         );
     }
-
-
-
 }
 
-export default Dashboard;
+function mapStateToProps(state){
+    return {
+        UserStore: state.UserStore
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(
+        {
+            checkToken
+        },
+        dispatch
+    )
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Dashboard)

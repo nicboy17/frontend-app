@@ -8,7 +8,7 @@ import { getReferralToken } from "../../actions/signInActions";
 class LeftSidebar extends Component {
     constructor (props) {
         super(props);
-        this.props.getReferralToken(this.props.UserStore.user.username);
+        this.props.getReferralToken();
     }
 
   render(){
