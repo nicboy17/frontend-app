@@ -6,9 +6,11 @@ import {
     SET_USER_ID,
     LOGIN,
     LOGIN_USER_SUCCESS,
-    LOGIN_USER_ERROR
- } from '../actions/types';
-import { loginUser } from "../services/userService";
+    LOGIN_USER_ERROR,
+    REFERRAL_TOKEN,
+    REFERRAL_TOKEN_SUCCESS, REFERRAL_TOKEN_ERROR
+} from '../actions/types';
+import { loginUser, getReferralCode } from "../services/userService";
 
 function getToken(data) {
     //TODO: Add logic to get jwt token using username and password
@@ -37,7 +39,7 @@ export function* getTokenSaga() {
 function* login(request) {
     try {
         const response = yield call(loginUser, request.user);
-        yield put({ type: LOGIN_USER_SUCCESS, response });
+        yield put({ type: LOGIN_USER_SUCCESS, response, request: request.user });
     } catch(error) {
         yield put({ type: LOGIN_USER_ERROR, error })
     }
@@ -45,4 +47,17 @@ function* login(request) {
 
 export function* loginSaga() {
     yield takeLatest(LOGIN, login);
+}
+
+function* referralToken(request) {
+    try{
+        const ref_code = yield call(getReferralCode, request.username);
+        yield put({ type: REFERRAL_TOKEN_SUCCESS, ref_code });
+    } catch(error) {
+        yield put({ type: REFERRAL_TOKEN_ERROR, error })
+    }
+}
+
+export function* referralTokenSaga() {
+    yield takeLatest(REFERRAL_TOKEN, referralToken);
 }

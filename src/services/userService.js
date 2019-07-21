@@ -24,3 +24,11 @@ export const resetPassword = (request) => {
         return res;
     });
 };
+
+export const getReferralCode = (username) => {
+    const REFERRAL_CODE_PASSWORD_API_ENDPOINT = url + '/frontend/user_data/'+ username;
+
+    return axios.get(REFERRAL_CODE_PASSWORD_API_ENDPOINT).then(res => {
+        return res.data.ref_code;
+    });
+};

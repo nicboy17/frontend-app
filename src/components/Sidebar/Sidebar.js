@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import './Sidebar.scss';
 import Sidebar, {SidebarStyles} from 'react-sidebar';
+import { getReferralToken } from "../../actions/signInActions";
 
 class LeftSidebar extends Component {
+    constructor (props) {
+        super(props);
+        this.props.getReferralToken(this.props.UserStore.user.username);
+    }
 
   render(){
     return (
@@ -10,61 +17,62 @@ class LeftSidebar extends Component {
         <ul className="sidebar navbar-nav" >
                 <div className="navigation-type">
                 <li className="nav-item">
-                    <i className="fa fa-home"></i>
+                    <i className="fa fa-home"/>
                     <span>Dashboard</span>
                 </li>
 
                 <li className="nav-item">
-                    <i className="fa fa-empire"></i>
+                    <i className="fa fa-empire"/>
                     {/* <i class="fas fa-steering-wheel"></i> */}
                     <span>Affiliates</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-clock-o"></i>
+                    <i className="fa fa-clock-o"/>
                     <span>Stats</span>
                 </li>
 
                 <li className="nav-item">
-                <i className="fa fa-line-chart"></i>
+                <i className="fa fa-line-chart"/>
                     <span>Exchange</span>
                 </li>
                 </div>
                 <div className="Currency-type"><li className="nav-item">
-                    <i className="fa fa-chevron-right"></i>
+                    <i className="fa fa-chevron-right"/>
                     <span>CLAM</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-chevron-right"></i>
+                    <i className="fa fa-chevron-right"/>
                     <span>BTC</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-chevron-right"></i>
+                    <i className="fa fa-chevron-right"/>
                     <span>CAD</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-chevron-right"></i>
+                    <i className="fa fa-chevron-right"/>
                     <span>USD</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-chevron-right"></i>
+                    <i className="fa fa-chevron-right"/>
                     <span>GOLD</span>
                 </li>
                 </div>
                 <div className="other-containt">
                 <li className="nav-item">
-                    <i className="fa fa-envelope-square"></i>
+                    <i className="fa fa-envelope-square"/>
                     <span>Contact</span>
                 </li>
                 <li className="nav-item">
-                    <i className="fa fa-sign-out"></i>
+                    <i className="fa fa-sign-out"/>
                     <span>Logout</span>
                 </li>
                 <li className="nav-item">
-                    <span>Referral Code</span>
+                    {
+                        this.props.UserStore.hasOwnProperty('response') ? <span>{this.props.UserStore.ref_code}</span> : <span>Referral Code</span>
+                    }
                 </li>
                 </div>
             </ul>
-
     </div>
     );
   }
@@ -149,4 +157,22 @@ class LeftSidebar extends Component {
 //     }
 // }
 
-export default LeftSidebar;
+function mapStateToProps(state){
+    return {
+        UserStore: state.UserStore
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(
+        {
+            getReferralToken
+        },
+        dispatch
+    )
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LeftSidebar);
