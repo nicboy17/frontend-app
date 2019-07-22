@@ -21,9 +21,9 @@ export default function userReducer (state = initialState, action) {
             newState = Object.assign({}, state, {authenticated: false});
             return { ...newState };
         case LOGIN_USER_SUCCESS:
-            return { ...state, response: action.response.data, user: action.request };
+            return { ...state, response: action.response, user: action.request };
         case LOGIN_USER_ERROR:
-            return { ...state, response: action.response.data };
+            return { ...state, response: action.response };
         case REFERRAL_TOKEN_SUCCESS:
             return { ...state, ref_code: action.ref_code };
         default:

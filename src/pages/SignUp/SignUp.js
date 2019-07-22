@@ -40,7 +40,7 @@ class SignUp extends Component {
 
         if(this.formValidator(signup)) {
             try {
-                const res = registerUser(signup);
+                const res = await registerUser(signup);
                 if (res.data.code === "Signup successful") {
                     this.props.history.push('/signIn');
                 }

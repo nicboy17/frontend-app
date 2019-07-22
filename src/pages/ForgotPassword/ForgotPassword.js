@@ -34,7 +34,7 @@ class ForgotPassword extends Component {
 
         if(this.formValidator(reset)) {
             try {
-                const res = resetPassword(reset);
+                const res = await resetPassword(reset);
                 if (res.data.code === 'Reset successful') {
                     this.props.history.push('/signIn');
                 }
